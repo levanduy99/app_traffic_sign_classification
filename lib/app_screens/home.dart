@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/physics.dart';
@@ -17,7 +18,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   File imageFile;
   final picker = ImagePicker();
-  var resultPredict;
+  var resultPredict="";
 
   _openGallery(BuildContext context) async{
     var picture = await picker.getImage(source: ImageSource.gallery);
@@ -39,7 +40,7 @@ class _LandingScreenState extends State<LandingScreen> {
   doUpload(File image) async{
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse("http://192.168.1.6:5000/predict"),
+      Uri.parse("http://192.168.1.2:5000/predict"),
     );
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
     request.files.add(
@@ -60,8 +61,9 @@ class _LandingScreenState extends State<LandingScreen> {
 
   handleThisResponse(StreamedResponse value ) async {
     var result = await value.stream.bytesToString();
-    resultPredict = result;
-    return resultPredict;
+    this.setState(() {
+      resultPredict = result;
+    });
   }
 
 
@@ -120,6 +122,10 @@ class _LandingScreenState extends State<LandingScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               _decideImageView(),
+              Center(
+                child: Text("Result: "+resultPredict,
+                  style: TextStyle(fontSize: 30, color: Colors.blue),),
+              ),
               RaisedButton(onPressed: (){
                 _showChoiceDialog(context);
               },child: Text("Select Image!"),),
@@ -127,22 +133,12 @@ class _LandingScreenState extends State<LandingScreen> {
                 //write function
                 doUpload(imageFile);
               }, child: Text("Predict"),),
-              Center(
-                child: Text("$resultPredict",
-                  style: TextStyle(fontSize: 30, color: Colors.blue),),
-              ),
             ],
           ),
         ),
       ),
     );
   }
-
-  // handleThisResponse(StreamedResponse value ) async {
-  //   var result = await value.stream.bytesToString();
-  //   print(result);
-  //   return result;
-  // }
 }
 
 class NoImageAsset extends StatelessWidget{
