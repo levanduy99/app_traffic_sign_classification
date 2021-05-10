@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import './top_bar.dart';
 
 
 class LandingScreen extends StatefulWidget {
@@ -103,10 +104,10 @@ class _LandingScreenState extends State<LandingScreen> {
         padding: EdgeInsets.all(5),
         margin: EdgeInsets.all(5),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black12, width: 3),
+          borderRadius: BorderRadius.circular(35),
+          border: Border.all(color: Colors.black12, width: 5),
         ),
-        child: Image.file(imageFile, width: 400.0, height: 400.0),);
+        child: Image.file(imageFile, width: 350.0, height: 350.0),);
     }
   }
 
@@ -116,28 +117,71 @@ class _LandingScreenState extends State<LandingScreen> {
       appBar: AppBar(
         title: Text("Traffic Sign Classification"),
       ),
-      body: Center(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              _decideImageView(),
-              Center(
-                child: Text("Result: "+resultPredict,
-                  style: TextStyle(fontSize: 30, color: Colors.blue),),
-              ),
-              RaisedButton(onPressed: (){
-                _showChoiceDialog(context);
-              },child: Text("Select Image!"),),
-              RaisedButton(onPressed: (){
-                //write function
-                doUpload(imageFile);
-              }, child: Text("Predict"),),
-            ],
-          ),
+      body:  Stack(
+          children: <Widget>[
+            Container(
+              child: TopBar(),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _decideImageView(),
+               Row(
+                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                   children: <Widget>[
+                     Center(
+                       child: IconButton(
+                         onPressed: () {
+                           _showChoiceDialog(context);
+                         },
+                         splashColor: Colors.cyan,
+                         color: Colors.blue,
+                         icon: Icon(
+                           Icons.add_photo_alternate,
+                         ),
+                         iconSize: 70.0,
+                         tooltip: "Add a photo",
+                       ),
+                     ),
+                     Center(
+                       child: IconButton(
+                         onPressed: () {
+                           doUpload(imageFile);
+                         },
+                         splashColor: Colors.cyan,
+                         color: Colors.blue,
+                         icon: Icon(
+                           Icons.batch_prediction_outlined,
+                         ),
+                         iconSize: 70.0,
+                         tooltip: "Predict Image",
+                       ),
+                     ),
+                     Center(
+                       child: IconButton(
+                         onPressed: () {
+
+                         },
+                         splashColor: Colors.cyan,
+                         color: Colors.blue,
+                         icon: Icon(
+                           Icons.library_books,
+                         ),
+                         iconSize: 70.0,
+                         tooltip: "More Information",
+                       ),
+                     )
+                   ],
+               ),
+                Center(
+                  child: Text("Result: "+resultPredict,
+                    style: TextStyle(fontSize: 35, color: Colors.blue), ),
+                ),
+              ],
+            )
+          ]
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -145,13 +189,13 @@ class NoImageAsset extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     AssetImage assetImage = AssetImage('images/no-image-icon.png');
-    Image image = Image(image: assetImage, width: 400.0, height: 400.0,);
+    Image image = Image(image: assetImage, width: 350.0, height: 350.0,);
     return Container(
       padding: EdgeInsets.all(5),
       margin: EdgeInsets.all(5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.black12, width: 3),
+        borderRadius: BorderRadius.circular(35),
+        border: Border.all(color: Colors.black12, width: 5),
       ),
       child: image,);
   }
