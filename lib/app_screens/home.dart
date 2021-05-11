@@ -8,7 +8,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import './top_bar.dart';
-
+import './traffic_signs_list.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -160,7 +160,12 @@ class _LandingScreenState extends State<LandingScreen> {
                      Center(
                        child: IconButton(
                          onPressed: () {
-
+                           Navigator.of(context)
+                               .push(
+                             MaterialPageRoute(
+                                 builder: (context) => TrafficSignsList()
+                             )
+                           );
                          },
                          splashColor: Colors.cyan,
                          color: Colors.blue,
