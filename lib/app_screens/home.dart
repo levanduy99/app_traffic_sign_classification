@@ -1,3 +1,5 @@
+import 'package:classify_traffic_sign/app_screens/traffic_sign_details.dart';
+import 'package:classify_traffic_sign/model/traffic_signs.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -19,7 +21,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   File imageFile;
   final picker = ImagePicker();
-  var resultPredict="";
+  var resultPredict="No Answer";
+  var showResult = "";
 
   _openGallery(BuildContext context) async{
     var picture = await picker.getImage(source: ImageSource.gallery);
@@ -41,7 +44,7 @@ class _LandingScreenState extends State<LandingScreen> {
   doUpload(File image) async{
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse("http://192.168.1.2:5000/predict"),
+      Uri.parse("http://192.168.1.8:5000/predict"),
     );
     Map<String, String> headers = {"Content-type": "multipart/form-data"};
     request.files.add(
@@ -67,26 +70,58 @@ class _LandingScreenState extends State<LandingScreen> {
     });
   }
 
+  //format result to show
+  _formatResult(){
+    if(resultPredict.length > 25){
+      return showResult = resultPredict.substring(0,23)+"...";
+    }
+    return resultPredict;
+  }
 
   Future<void> _showChoiceDialog(BuildContext context){
     return showDialog(context: context, builder: (BuildContext context){
       return AlertDialog(
-        title: Text("Make a Choice!"),
+        title: Text("Make a Choice!",
+          style: TextStyle(fontSize: 25, color: Colors.black),),
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
-              GestureDetector(
-                child: Text("Gallery"),
-                onTap: (){
-                  _openGallery(context);
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  GestureDetector(
+                    child: Icon(
+                      Icons.collections_sharp,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Text("Gallery",
+                      style: TextStyle(fontSize: 20, color: Colors.black),),
+                    onTap: (){
+                      _openGallery(context);
+                    },
+                  ),
+                ],
               ),
               Padding(padding: EdgeInsets.all(8.0)),
-              GestureDetector(
-                child: Text("Camera"),
-                onTap: (){
-                  _openCamera(context);
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  GestureDetector(
+                    child: Icon(
+                      Icons.camera_alt,
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Text("Camera",
+                      style: TextStyle(fontSize: 20, color: Colors.black),),
+                    onTap: (){
+                      _openCamera(context);
+                    },
+                  )
+                ],
               )
             ],
           ),
@@ -109,6 +144,15 @@ class _LandingScreenState extends State<LandingScreen> {
         ),
         child: Image.file(imageFile, width: 350.0, height: 350.0),);
     }
+  }
+
+  _decidePushScreen(){
+    for(int i = 0; i < trafficSignsList.length; i++){
+      if(resultPredict.toLowerCase() == trafficSignsList[i].title.toLowerCase()){
+        return TrafficSignDetails(trafficSignsList[i]);
+        }
+    }
+    return TrafficSignsList();
   }
 
   @override
@@ -178,10 +222,44 @@ class _LandingScreenState extends State<LandingScreen> {
                      )
                    ],
                ),
-                Center(
-                  child: Text("Result: "+resultPredict,
-                    style: TextStyle(fontSize: 35, color: Colors.blue), ),
-                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Center(
+                      child: Expanded(
+                        child: Text(_formatResult(),
+                          style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.justify,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(
+                              MaterialPageRoute(
+                                  builder: (context) => _decidePushScreen()
+                              )
+                          );
+                        },
+                        splashColor: Colors.cyan,
+                        color: Colors.black,
+                        icon: Icon(
+                          Icons.search,
+                        ),
+                        iconSize: 50.0,
+                        tooltip: "Search Traffic Sign",
+                      ),
+                    )
+                  ],
+                )
               ],
             )
           ]

@@ -1,32 +1,76 @@
 import 'package:classify_traffic_sign/app_screens/traffic_sign_details.dart';
 import 'package:classify_traffic_sign/model/traffic_signs.dart';
 import 'package:flutter/material.dart';
+import 'package:classify_traffic_sign/widget/search_widget.dart';
 
-class TrafficSignsList extends StatelessWidget{
+class TrafficSignsList extends StatefulWidget {
+  @override
+  TrafficSignsListState createState() => TrafficSignsListState();
+}
+
+class TrafficSignsListState extends State<TrafficSignsList>{
+  List<TrafficSigns> trafficSigns;
+  String query = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    trafficSigns = trafficSignsList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Traffic Signs"),
+        centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: trafficSignsList.length,
-        itemBuilder: (context, index) {
-          TrafficSigns trafficSigns = trafficSignsList[index];
-          return Card(
-            child: ListTile(
-              hoverColor: Colors.black12,
-              title: Text(trafficSigns.title),
-              leading: Image.network(trafficSigns.imageUrl),
-              trailing: Icon(Icons.arrow_forward_rounded),
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => TrafficSignDetails(trafficSigns)));
-              },
-            ),
-          );
-        },
-      ),
+      body: Column(
+        children: <Widget>[
+          buildSearch(),
+          Expanded(
+            child: ListView.builder(
+            itemCount: trafficSigns.length,
+            itemBuilder: (context, index) {
+              TrafficSigns trafficSign = trafficSigns[index];
+              return Card(
+                child: ListTile(
+                  hoverColor: Colors.black12,
+                  title: Text(trafficSign.title),
+                  leading: Image.network(
+                    trafficSign.imageUrl,
+                  ),
+                  trailing: Icon(Icons.arrow_forward_rounded),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => TrafficSignDetails(trafficSign)));
+                  },
+                ),
+              );
+            },
+          ),)
+        ],
+      )
     );
+  }
+
+  Widget buildSearch() => SearchWidget(
+    text: query,
+    hintText: 'Traffic Sign Name',
+    onChanged: searchTrafficSign,
+  );
+
+  void searchTrafficSign(String query) {
+    final trafficSigns = trafficSignsList.where((trafficSigns) {
+      final titleLower = trafficSigns.title.toLowerCase();
+      final searchLower = query.toLowerCase();
+      return titleLower.contains(searchLower);
+    }).toList();
+
+    setState(() {
+      this.query = query;
+      this.trafficSigns = trafficSigns;
+    });
   }
 }

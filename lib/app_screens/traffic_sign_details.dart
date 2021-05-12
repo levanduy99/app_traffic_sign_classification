@@ -20,14 +20,14 @@ class TrafficSignDetails extends StatelessWidget{
             children: [
               Image.network(
                 trafficSigns.imageUrl,
-                height: 500,
+                height: 400,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   trafficSigns.description,
                   textAlign: TextAlign.justify,
-                  style: TextStyle(fontSize: 22.0),
+                  style: TextStyle(fontSize: 18.0),
                 ),
               ),
             ],
