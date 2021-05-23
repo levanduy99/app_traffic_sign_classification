@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "622614940406",
+    "firebase_url": "https://app-classify-traffic-sign-default-rtdb.firebaseio.com",
+    "project_id": "app-classify-traffic-sign",
+    "storage_bucket": "app-classify-traffic-sign.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622614940406:android:c1ebfee5d4b15ee0bcfad7",
+        "android_client_info": {
+          "package_name": "com.example.classify_traffic_sign"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622614940406-ufsjfekg3aiv153et4mdu3mf06l2bn78.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDejbjmGGqqfinjYqOkuOqPSZ64mIqDwaU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622614940406-ufsjfekg3aiv153et4mdu3mf06l2bn78.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
